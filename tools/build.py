@@ -53,4 +53,4 @@ if __name__ == '__main__':
     write(os.path.join(web, '.nojekyll'), '')
     for n in ('index.html', 'inst.html'):
         shutil.copyfile(os.path.join(web, n), os.path.join(ROOT, 'app', n))
-    print('copied index.html, inst.html → app/')
+    print('copied index.html, inst.html -> app/')

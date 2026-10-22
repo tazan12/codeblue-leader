@@ -3,6 +3,13 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      tag:
+        description: '설치 파일을 붙일 릴리스 태그 (예: v1.0.3). 비우면 빌드 결과만 보관'
+        required: false
+        default: ''
+env:
+  PYTHONUTF8: '1'
 permissions:
   contents: write
 jobs:
@@ -30,15 +37,15 @@ jobs:
         shell: pwsh
         run: Copy-Item app/install-guide.txt app/dist/install-guide.txt
       - name: 릴리스에 올리기
-        if: github.event_name == 'release'
+        if: github.event_name == 'release' || inputs.tag != ''
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event.release.tag_name }}
+          tag_name: ${{ github.event.release.tag_name || inputs.tag }}
           files: |
             app/dist/*.exe
             app/dist/install-guide.txt
       - name: 빌드 결과 보관 (수동 실행 시)
-        if: github.event_name != 'release'
+        if: github.event_name != 'release' && inputs.tag == ''
         uses: actions/upload-artifact@v4
         with:
           name: CodeBlueLeader-Setup
