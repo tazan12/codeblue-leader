@@ -39,7 +39,7 @@ app/            Windows 설치판(Electron): main.js, preload.js, package.json, 
 python tools/build.py                 # 웹: dist/web/index.html
 cd app && npm ci && npx electron-builder --win nsis --x64   # 설치판: app/dist/*.exe
 ```
-새 버전 배포는 `app/package.json` 의 version 을 올린 뒤 `git tag vX.Y.Z && git push --tags` 로 합니다.
+새 버전 배포: `app/package.json` 의 version 을 올려 main 에 푸시한 뒤, GitHub에서 **Releases → Draft a new release** 로 `vX.Y.Z` 릴리스를 게시하면 설치판이 자동으로 빌드되어 릴리스에 붙습니다.
 
 ## 알림
 - 교육용 시뮬레이션입니다. 실제 진료 지침, 의학적 판단, 공식 자격 과정을 대신하지 않습니다. 생리 반응과 확률은 학습을 위해 단순화했습니다.
