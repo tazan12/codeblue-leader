@@ -1,0 +1,7 @@
+dist/
+app/node_modules/
+app/dist/
+app/index.html
+app/inst.html
+__pycache__/
+*.log

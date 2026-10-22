@@ -1,0 +1,35 @@
+/* ===== 사용자 정의 케이스 설계실 ===== */
+.builder.cu{display:grid;gap:.9rem}
+.cu-head{display:flex;gap:1rem;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.cu-head h3{font-size:1.05rem;margin-bottom:.2rem}
+.cu-hbtn{display:flex;gap:.4rem;flex-wrap:wrap}
+.cu-lib{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,22rem),1fr));gap:.55rem}
+.cu-card{display:grid;gap:.5rem;padding:.7rem .8rem;border:1px solid var(--line2);border-radius:var(--r-sm);background:var(--bg2);min-width:0}
+.cu-ct{display:grid;gap:.15rem;min-width:0}.cu-ct b{font-size:.95rem}.cu-ct span{font-size:.78rem;color:var(--muted)}
+.cu-cb{display:flex;gap:.3rem;flex-wrap:wrap}
+.cu-empty{font-size:.85rem}
+.cu-imp{display:grid;gap:.45rem;padding:.8rem;border:1px dashed var(--line2);border-radius:var(--r-sm)}
+.cu-imp label{font-size:.8rem;color:var(--muted)}
+.cu-imp textarea{width:100%;border:1px solid var(--line2);border-radius:7px;background:var(--bg2);padding:.5rem;font-family:var(--f-mono);font-size:.78rem;color:var(--ink)}
+.cu-row{display:flex;gap:.45rem;align-items:center;flex-wrap:wrap}.cu-row .sp{flex:1}
+.cu-ed{display:grid;gap:.8rem;padding:1rem;border:1px solid var(--team);border-radius:var(--r);background:linear-gradient(180deg,var(--team-soft),transparent 120px)}
+.cu-edh{display:flex;justify-content:space-between;align-items:center;gap:.6rem;flex-wrap:wrap}.cu-edh h3{font-size:1.05rem}
+.cu-edh select{border:1px solid var(--line2);border-radius:7px;background:var(--bg2);padding:.4rem .5rem;color:var(--ink);max-width:100%}
+.cu-sec{border:1px solid var(--line);border-radius:var(--r-sm);padding:.7rem .8rem .8rem;margin:0;min-width:0}
+.cu-sec legend{display:flex;align-items:center;gap:.45rem;font-weight:600;font-size:.92rem;padding:0 .35rem}
+.cu-sec legend span{display:inline-grid;place-items:center;width:1.35rem;height:1.35rem;border-radius:50%;background:var(--team);color:var(--team-ink);font-size:.75rem;font-family:var(--f-mono)}
+.cu-sec .fgrid{margin-top:.3rem}
+.cu-note{font-size:.78rem;margin-top:.45rem}
+.cu-chk{display:flex!important;align-items:center;gap:.45rem;font-size:.85rem!important;color:var(--ink)!important;cursor:pointer;padding-top:1.3rem}
+.cu-chk input{width:auto!important}
+.cu-ev{display:flex;gap:.35rem;align-items:center;flex-wrap:wrap;padding:.4rem 0;border-bottom:1px dashed var(--line)}
+.cu-ev select,.cu-ev input{border:1px solid var(--line2);border-radius:7px;background:var(--bg2);padding:.38rem .45rem;color:var(--ink);min-width:0}
+.cu-ev input.sec{width:5rem}.cu-ev input[data-k="hr"]{width:4.6rem}.cu-ev input.wide{flex:1;min-width:12rem}
+.cu-ev span{font-size:.8rem;color:var(--muted)}
+.cu-err{color:var(--bad);font-size:.85rem;display:grid;gap:.15rem}
+.cu-foot{border-top:1px solid var(--line);padding-top:.7rem}
+.cu-obj{margin-top:.8rem;padding:.6rem .8rem;border-radius:8px;background:var(--team-soft);border:1px solid rgba(47,211,191,.35)}
+.cu-obj b{font-size:.85rem}.cu-obj ul{margin:.3rem 0 0 1.1rem;font-size:.86rem;color:var(--ink2)}
+.cu-team{margin-top:.5rem;font-size:.82rem}
+.cu-dbox{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr));gap:.8rem;margin:.9rem 0;padding:.8rem 1rem;border:1px solid rgba(47,211,191,.35);border-radius:var(--r);background:var(--team-soft)}
+.cu-dbox ul{margin:.3rem 0 0 1.1rem;font-size:.88rem;color:var(--ink2)}

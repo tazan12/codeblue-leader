@@ -1,0 +1,39 @@
+/* ---------- 알고리즘 요약 흐름도 (algo2.css) ---------- */
+.algo-body{max-width:none}
+.algo-body>:not(.algo-fig):not(.algo-chips){max-width:62ch}
+.algo-fig{margin:.15rem 0 .9rem;padding:.7rem .75rem .6rem;background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.algo-fig-h{display:flex;align-items:baseline;gap:.55rem;margin:0 0 .45rem;font-size:.8rem}
+.algo-fig-h span{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.algo-fig-h b{color:var(--ink);font-weight:600}
+.algo-fig svg{display:block;width:100%;height:auto;max-width:960px;margin:0 auto;font-family:inherit;overflow:visible}
+.algo-fig .fb{fill:var(--bg2)}
+.algo-fig .fn{stroke-width:1.6}
+.algo-fig .fn-start{fill:var(--team-soft);stroke:var(--team)}
+.algo-fig .fn-act{fill:var(--panel2);stroke:var(--line2)}
+.algo-fig .fn-dec{fill:var(--warn-soft);stroke:var(--warn)}
+.algo-fig .fn-drug{fill:var(--inst-soft);stroke:var(--inst)}
+.algo-fig .fn-shock{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
+.algo-fig .fn-ok{fill:var(--ok-soft);stroke:var(--ok)}
+.algo-fig .fn-note{fill:none;stroke:var(--line2);stroke-dasharray:4 4}
+.algo-fig .fz{fill:var(--accent)}
+.algo-fig .t1{fill:var(--ink);font-size:15px;font-weight:600;text-anchor:middle}
+.algo-fig .t2{fill:var(--ink2);font-size:12.5px;text-anchor:middle}
+.algo-fig .fe{fill:none;stroke:var(--muted);stroke-width:1.6;stroke-linejoin:round}
+.algo-fig .fe.dash{stroke:var(--dim);stroke-dasharray:4 4}
+.algo-fig .fh{fill:var(--muted)}
+.algo-fig .el{fill:var(--ink2);font-size:12px;font-weight:600;paint-order:stroke;stroke:var(--bg2);stroke-width:5px;stroke-linejoin:round}
+.algo-fig .hd{fill:var(--muted);font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-anchor:middle}
+.algo-legend{display:flex;flex-wrap:wrap;gap:.3rem .9rem;margin-top:.55rem;font-size:.74rem;color:var(--muted);align-items:center}
+.algo-legend .lg{display:inline-flex;align-items:center;gap:.35rem;white-space:nowrap}
+.algo-legend .sw{display:inline-block;width:.8rem;height:.8rem;border-radius:3px;border:1.5px solid}
+.algo-legend .sw-start{background:var(--team-soft);border-color:var(--team);border-radius:1rem}
+.algo-legend .sw-act{background:var(--panel2);border-color:var(--line2)}
+.algo-legend .sw-dec{background:var(--warn-soft);border-color:var(--warn);transform:rotate(45deg) scale(.85)}
+.algo-legend .sw-drug{background:var(--inst-soft);border-color:var(--inst);border-radius:.3rem}
+.algo-legend .sw-shock{background:var(--accent-soft);border-color:var(--accent);border-radius:2px}
+.algo-legend .sw-ok{background:var(--ok-soft);border-color:var(--ok);border-radius:1rem}
+.algo-legend .sw-note{background:none;border-color:var(--line2);border-style:dashed}
+.algo-legend .cap{margin-left:auto;color:var(--ink2)}
+.algo-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin:-.3rem 0 .9rem}
+.algo-chips span{font-size:.78rem;padding:.2rem .55rem;border-radius:999px;background:var(--team-soft);color:var(--ink);border:1px solid rgba(47,211,191,.35);font-variant-numeric:tabular-nums}
+@media (max-width:760px){.algo-legend .cap{margin-left:0;flex-basis:100%}}

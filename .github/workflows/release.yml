@@ -1,0 +1,45 @@
+name: Windows 설치판 빌드·릴리스
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 웹 페이지 빌드 → app/
+        run: python tools/build.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - name: 의존성 설치
+        working-directory: app
+        run: npm ci
+      - name: 설치 파일 빌드 (NSIS x64)
+        working-directory: app
+        run: npx electron-builder --win nsis --x64 --publish never
+      - name: 설치 안내 복사
+        shell: pwsh
+        run: Copy-Item app/install-guide.txt app/dist/install-guide.txt
+      - name: 릴리스에 올리기
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            app/dist/*.exe
+            app/dist/install-guide.txt
+          body_path: RELEASE_NOTES.md
+      - name: 빌드 결과 보관 (수동 실행 시)
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: CodeBlueLeader-Setup
+          path: app/dist/*.exe

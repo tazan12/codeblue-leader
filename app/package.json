@@ -1,0 +1,66 @@
+{
+  "name": "codeblue-leader",
+  "productName": "CodeBlueLeader",
+  "version": "1.0.3",
+  "description": "코드블루 리더 - 병동 전문소생술 팀 리더 시뮬레이터",
+  "author": "Kyungmin University Nursing",
+  "main": "main.js",
+  "scripts": {
+    "dist": "electron-builder --win nsis --x64"
+  },
+  "build": {
+    "appId": "kr.ac.kyungmin.codeblueleader",
+    "productName": "CodeBlueLeader",
+    "copyright": "Educational use",
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "inst.html",
+      "build/icon.png"
+    ],
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "코드블루 리더",
+      "uninstallDisplayName": "코드블루 리더",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerLanguages": [
+        "ko_KR"
+      ],
+      "language": "1042",
+      "artifactName": "CodeBlueLeader-Setup-${version}-x64.${ext}"
+    },
+    "electronVersion": "37.10.3"
+  },
+  "devDependencies": {
+    "electron": "^37.10.3",
+    "electron-builder": "^26.15.3"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tazan12/codeblue-leader.git"
+  }
+}
