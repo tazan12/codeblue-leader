@@ -66,12 +66,12 @@ function roscDeclare(){
  S.members.filter(m=>m.task==='cpr').forEach(m=>{m.task=null;m.prog=0;m.paused=false;m.handoff=null;});
  S.members.filter(m=>m.paused&&m.task!=='cpr').forEach(m=>m.paused=false);S.hold=null;
  log('리더: "ROSC입니다! 맥박 확인됐습니다. 가슴압박 중지, ROSC 후 치료를 시작합니다."','comm');
- log('ROSC 선언 ('+fmt(S.t)+') — 혈압·SpO₂ 92–98%·EtCO₂ 35–45·환기 10회/분·12유도 심전도·목표체온 조절을 확인하세요.','dev');
+ log('ROSC 선언 ('+fmt(S.t)+') — 오른쪽 [목표] 탭의 ‘ROSC 이후 처치’를 순서대로 진행하세요: 감시장치 → 산소(SpO₂ 90–98%) → 환기(10회/분, EtCO₂ 35–45) → 혈압(MAP ≥ 65) → 12유도 → 체온 조절.','dev');
  vsay('pro','lead_rosc',{urgent:true,fb:'ROSC입니다! 맥박 확인됐습니다. 가슴압박 중지.'});
  setTimeout(()=>vsay('pro','lead_post',{fb:'ROSC 후 치료 시작합니다. 혈압, 산소포화도, 호기말 이산화탄소 확인하세요.'}),300);
  showRoscBanner();}
 function showRoscBanner(){const st=$('#stage');if(!st)return;let b=$('#roscban');if(!b){b=document.createElement('div');b.id='roscban';b.className='roscban';st.appendChild(b);}
- b.innerHTML='<div class="rb-k">ROSC</div><div class="rb-t">자발순환 회복 선언 · '+fmt(S.t)+'</div><div class="rb-c">'+['기도·EtCO₂ 35–45','SpO₂ 90–98%','환기 10회/분','SBP ≥ 90 · MAP ≥ 65','12유도 심전도','목표체온 조절'].map(x=>'<span>'+x+'</span>').join('')+'</div>';
+ b.innerHTML='<div class="rb-k">ROSC</div><div class="rb-t">자발순환 회복 선언 · '+fmt(S.t)+'</div><div class="rb-c">'+['기도·EtCO₂ 35–45','SpO₂ 90–98%','환기 10회/분','SBP ≥ 90 · MAP ≥ 65','12유도 심전도','체온 조절 결정'].map(x=>'<span>'+x+'</span>').join('')+'</div><div class="rb-g">오른쪽 [목표] 탭에서 순서대로 진행하세요 →</div>';
  b.classList.remove('on');void b.offsetWidth;b.classList.add('on');clearTimeout(b._t);b._t=setTimeout(()=>b.classList.remove('on'),7000);}
 
 // 맥박 확인 후 자동 확정 대신: 리더가 선언하도록 안내

@@ -63,3 +63,14 @@ html.proj .fatban b{font-size:1.25rem}
 .asscard .ac-v.ok{color:#7ff0b4}.asscard .ac-v.bad{color:#ff8a94}
 .asscard .ac-next{margin-top:.45rem;padding-top:.45rem;border-top:1px dashed rgba(255,255,255,.18);font-size:.82rem;color:#f3e6d6}
 .asscard.arrest{border-color:rgba(255,79,94,.85);box-shadow:0 0 40px rgba(255,79,94,.3)}.asscard.stable{border-color:rgba(65,221,136,.75)}.asscard.resp{border-color:rgba(255,182,72,.8)}.asscard.na{border-color:rgba(255,182,72,.6)}
+/* ROSC 이후 처치 단계 */
+.rsteps{display:grid;gap:.4rem}
+.rs-top{font-size:.82rem;color:var(--warn);margin:0 0 .2rem}
+.rs{border:1px solid var(--line);border-radius:10px;padding:.5rem .6rem;background:var(--bg2)}
+.rs-h{display:flex;align-items:center;gap:.5rem}.rs-h i{width:1.4rem;height:1.4rem;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:.72rem;font-family:var(--f-mono);border:1px solid var(--line2);color:var(--muted);flex:none}
+.rs-h b{font-size:.86rem;font-weight:600}.rs-h .num{margin-left:auto;font-size:.76rem;color:var(--ink2);white-space:nowrap}
+.rs.ok{opacity:.62}.rs.ok .rs-h i{background:var(--ok);border-color:var(--ok);color:#04220f}
+.rs.next{border-color:var(--team);box-shadow:0 0 0 1px var(--team) inset,0 0 18px var(--team-soft)}.rs.next .rs-h i{background:var(--team);border-color:var(--team);color:var(--team-ink)}
+.rs-why{font-size:.76rem;color:var(--muted);margin:.3rem 0 0 1.9rem}
+.rs-act{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;margin:.4rem 0 0 1.9rem}.rs-lab{font-size:.74rem;color:var(--muted)}
+.roscban .rb-g{margin-top:.5rem;font-size:.85rem;color:#bff5d9;font-weight:600}

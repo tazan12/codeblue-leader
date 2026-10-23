@@ -570,7 +570,7 @@ function conditions(){
   {label:'EtCO₂ 35–45 mmHg (환기 10회/분)',ok:rc&&P.etco2Sensor&&P.etco2>=35&&P.etco2<=45,v:P.etco2Sensor?Math.round(P.etco2):''},
   {label:'ROSC 후 측정 MAP ≥ 65',ok:rc&&S.bpAfterRosc&&S.nibp.last&&S.nibp.last.ok&&(S.nibp.last.sys+2*S.nibp.last.dia)/3>=65&&S.nibp.last.t>S.roscT,v:S.nibp.last&&S.nibp.last.ok&&S.roscT!=null&&S.nibp.last.t>S.roscT?'MAP '+Math.round((S.nibp.last.sys+2*S.nibp.last.dia)/3):''},
   {label:'12유도 심전도',ok:rc&&S.ecg12Done},
-  {label:'목표체온 조절 결정',ok:rc&&S.ttm},
+  {label:'체온 조절 결정',ok:rc&&S.ttm},
   {label:'안정 유지 30초',ok:rc&&S.stable>=30,v:rc?Math.min(30,Math.floor(S.stable))+'/30초':''}
  ];
 }

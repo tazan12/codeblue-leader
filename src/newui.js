@@ -186,7 +186,7 @@ function renderDock(){
   '<div class="seg"><button data-site="경동맥" class="'+(S.site==='경동맥'?'on':'')+'">경동맥</button><button data-site="대퇴동맥" class="'+(S.site==='대퇴동맥'?'on':'')+'">대퇴</button></div><span class="t num'+(a?(ad>10?' over':ad>=5?' ok':''):'')+'">'+(a?ad.toFixed(1):'—')+'</span></div>'+
   '<button class="btn" data-act="clear">모두 떨어지세요</button><button class="btn" data-act="resume"'+(S.members.some(m=>m.paused)?'':' disabled')+'>처치 재개</button>'+
   '<button class="btn" data-act="read"'+(P.pads?'':' disabled title="패드나 심전도 전극을 붙이면 판독할 수 있습니다"')+'>리듬 판독</button>'+
-  (S.roscConfirmed&&P.pulse?'<button class="btn'+(S.ttm?'':' primary')+'" data-act="ttm"'+(S.ttm?' disabled':'')+'>'+(S.ttm?'목표체온 결정됨':'목표체온 조절 결정')+'</button>':'')+
+  (S.roscConfirmed&&P.pulse?'<button class="btn'+(S.ttm?'':' primary')+'" data-act="ttm"'+(S.ttm?' disabled':'')+'>'+(S.ttm?'체온 조절 결정됨':'체온 조절 결정')+'</button>':'')+
  '</div>';
  h+='<div class="roster">'+S.members.map(m=>{const T=m.task?TASKS[m.task]:null;let st=T?(m.prog<m.prep?T.busy+' 준비 중':T.busy):'대기 — 지시 가능';if(m.task==='drug'&&m.payload)st='약물: '+FORM[m.payload].dname;if(m.paused)st+=' · 손 뗌';
   if(m.task==='cpr'&&m.prog>=m.prep)st+=' '+fmt(m.cprT);const pct=T&&m.prog<m.prep?Math.round(m.prog/m.prep*10)*10:(T&&T.cont?100:0);

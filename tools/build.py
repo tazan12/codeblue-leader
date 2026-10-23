@@ -8,7 +8,7 @@ import os, sys, shutil
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'src')
 CSS = ['fx2.css', 'instcon.css', 'custom2.css', 'algo2.css', 'learn2.css']
-JS = ['core.js', 'keep_hints.js', 'newui.js', 'fx.js', 'events.js', 'fx2.js', 'protocol.js', 'assess2.js',
+JS = ['core.js', 'keep_hints.js', 'newui.js', 'fx.js', 'events.js', 'fx2.js', 'protocol.js', 'assess2.js', 'rosc2.js',
       'fatigue.js', 'learn2.js', 'custom2.js', 'algo2.js', 'instcon.js', 'inst2.js']
 ASSETS = ['assets/assets4.js', 'assets/herovid.js', 'assets/voice.js']
 
