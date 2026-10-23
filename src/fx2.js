@@ -117,3 +117,7 @@ fxTick=function(){__fxTick2();if(!S||curScreen!=='sim')return;const P=S.P;
 const __cb2=codeBlue;codeBlue=function(){const was=S.codeBlue.status;__cb2();if(was==='idle'&&S.codeBlue.status!=='idle')vsay('leader','call',{urgent:true});};
 const __charge2=charge;charge=function(){if(S&&!S.P.pads)vsay('device','nopads',{});__charge2();};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act="sync"]');if(b&&S)setTimeout(()=>{if(S.def.sync)vsay('device','sync',{});},0);});
+
+/* ---- 압박자 크기 보정(손 위치 고정, 0.82배) + 기관내관 환기 시 얼굴이 움직이지 않게 ---- */
+(function(){const c=IMG.patch&&IMG.patch.cpr;if(c&&!c._scaled){const s=0.82,hx=45.19,hy=47.3,rx=(hx-c.x)/c.w,hTot=61.013,ry=(hy-c.y)/hTot;
+ c.w=+(c.w*s).toFixed(3);c.x=+(hx-rx*c.w).toFixed(3);c.y=+(hy-ry*hTot*s+1).toFixed(3);c._scaled=true;}})();

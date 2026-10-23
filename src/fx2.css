@@ -74,3 +74,8 @@ html.proj .fatban b{font-size:1.25rem}
 .rs-why{font-size:.76rem;color:var(--muted);margin:.3rem 0 0 1.9rem}
 .rs-act{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;margin:.4rem 0 0 1.9rem}.rs-lab{font-size:.74rem;color:var(--muted)}
 .roscban .rb-g{margin-top:.5rem;font-size:.85rem;color:#bff5d9;font-weight:600}
+/* 압박자: 축소 후 위쪽 가장자리를 부드럽게 */
+#pt-cpr{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 22%);mask-image:linear-gradient(to bottom,transparent 0,#000 22%)}
+/* 기관내관 환기: 얼굴이 함께 움직이던 변형 제거, 밝기만 살짝 */
+#pt-ett.vent{animation:ettpulse .9s ease-in-out!important}
+@keyframes ettpulse{0%,100%{filter:none}35%{filter:brightness(1.07)}}
