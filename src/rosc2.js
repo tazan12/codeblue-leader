@@ -15,8 +15,13 @@ function roscSteps(){const P=S.P,rc=S.roscConfirmed&&P.pulse,hint=S.mode!=='test
  const co=P.etco2Sensor?Math.round(P.etco2):null;
  steps.push({k:'vent',t:'환기 — 10회/분, EtCO₂ 35–45',v:co!=null?'EtCO₂ '+co+(vent?' · '+vent.ventRate+'회/분':''):'EtCO₂ 센서 없음',ok:rc&&P.etco2Sensor&&P.etco2>=35&&P.etco2<=45,why:'과환기는 뇌혈류를 줄입니다. EtCO₂가 낮으면 횟수를 줄이고, 높으면 늘립니다.',
   act:vent?'<span class="rs-lab">횟수</span><div class="seg">'+[8,10,12].map(x=>'<button data-act="vrate" data-m="'+vent.id+'" data-v="'+x+'" class="'+(vent.ventRate===x?'on':'')+'">'+x+'</button>').join('')+'</div>'+(P.etco2Sensor?'':B('data-otask="etco2"','EtCO₂ 센서')):B('data-otask="bvm"','백마스크 환기 시작')+(P.airway!=='ett'?B('data-otask="ett"','기관내삽관'):'')});
- const neOn=S.infusions.some(f=>f.fid==='neD'),nsOn=S.infusions.some(f=>f.fid==='ns500'||f.fid==='ns1000');const bpAct=[];if(map!=null&&map<65){if(!nsOn)bpAct.push(B('data-drug="ns500"','수액 500 mL'));if(!neOn)bpAct.push(B('data-drug="neD"','노르에피네프린'));}bpAct.push(P.cuff?B('data-act="nibp"',S.nibp.busy?'측정 중…':(map!=null?'혈압 다시 측정':'혈압 측정')):B('data-otask="cuff"','혈압 커프 먼저'));if(neOn||nsOn)bpAct.push('<span class="rs-lab">'+(neOn?'노르에피네프린':'')+(neOn&&nsOn?'·':'')+(nsOn?'수액':'')+' 주입 중 — 잠시 뒤 다시 측정</span>');
- steps.push({k:'bp',t:'혈압 — MAP ≥ 65 (수축기 ≥ 90)',v:map!=null?'MAP '+map+' ('+n.sys+'/'+n.dia+')':'ROSC 후 측정 없음',ok:rc&&S.bpAfterRosc&&map!=null&&map>=65,why:'저혈압을 두면 다시 심정지가 올 수 있습니다. 낮으면 수액·혈관수축제 후 다시 잽니다.',act:bpAct.join('')});
+ const neOn=S.infusions.some(f=>f.fid==='neD'),nsOn=S.infusions.some(f=>f.fid==='ns500'||f.fid==='ns1000');const bpAct=[];
+ const txSince=S.drugs.some(d=>['neD','ns500','ns1000'].includes(d.form)&&(!n||d.t>n.t));
+ const meas=P.cuff?B('data-act="nibp"',S.nibp.busy?'측정 중…':(map!=null?'혈압 다시 측정':'혈압 측정'),(txSince||neOn||nsOn)&&!S.nibp.busy?'primary':''):B('data-otask="cuff"','혈압 커프 먼저');
+ const txBtns=[];if(map!=null&&map<65&&!txSince){if(!nsOn)txBtns.push(B('data-drug="ns500"','수액 500 mL'));if(!neOn)txBtns.push(B('data-drug="neD"','노르에피네프린'));}
+ if(map!=null&&map<65&&txSince){bpAct.push(meas);if(!nsOn)txBtns.push(B('data-drug="ns500"','수액 추가 500 mL'));if(!neOn)txBtns.push(B('data-drug="neD"','노르에피네프린'));bpAct.push(...txBtns);}
+ else{bpAct.push(...txBtns,meas);}if(neOn||nsOn)bpAct.push('<span class="rs-lab">'+(neOn?'노르에피네프린':'')+(neOn&&nsOn?'·':'')+(nsOn?'수액':'')+' 주입 중 — 잠시 뒤 다시 측정</span>');
+ steps.push({k:'bp',t:'혈압 — MAP ≥ 65 (수축기 ≥ 90)',v:map!=null?'MAP '+map+' ('+n.sys+'/'+n.dia+')':'ROSC 후 측정 없음',ok:rc&&S.bpAfterRosc&&map!=null&&map>=65,why:(map!=null&&map<65&&txSince)?'수액·승압제를 줬으면 먼저 혈압을 다시 재서 효과를 확인하세요. 그래도 낮으면 추가 처치합니다.':'저혈압을 두면 다시 심정지가 올 수 있습니다. 낮으면 수액·혈관수축제 후 다시 잽니다.',act:bpAct.join('')});
  steps.push({k:'ecg',t:'12유도 심전도',ok:rc&&S.ecg12Done,why:'ST 상승이면 응급 관상동맥 조영술을 연계합니다.',act:S.ecg12Done?'':B('data-otask="ecg12"','12유도 시행')});
  steps.push({k:'ttm',t:'체온 조절 결정 (32–37.5 °C)',ok:rc&&S.ttm,why:'지시에 따르지 않으면 36시간 이상 체온 조절, 발열 예방을 결정합니다.',act:S.ttm?'':B('data-act="ttm"','체온 조절 결정')});
  steps.push({k:'stable',t:'안정 유지 30초',v:rc?Math.min(30,Math.floor(S.stable))+'/30초':'',ok:rc&&S.stable>=30,why:'위 목표가 모두 유지되면 30초 뒤 케이스가 끝납니다.',act:''});
