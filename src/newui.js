@@ -48,19 +48,30 @@ function ensureMonitor(){
   {fn:t=>S.eng.pleth(t),min:-0.1,max:1.4,color:cssv('--pleth')},
   {fn:t=>S.eng.co2(t),min:-2,max:55,color:cssv('--co2')}],112);});
 }
-function renderMonitorNums(){
- const P=S.P,r=RH[P.rhythm];
+/* 학생 모니터에 실제로 표시되는 값 — 모니터와 강사 창이 같은 함수를 씁니다 */
+function monShown(){
+ const P=S.P,r=RH[P.rhythm],n=S.nibp;
  let hr='--';if(P.pads){hr=r.cont?'---':Math.round(P.paceCapture?P.pace.rate:(P.holdUntil>S.t?0:P.hr));}else if(P.probe&&P.pulse)hr=Math.round(P.hr);
+ const sp=P.probe?(P.pulse&&!P.compressing?Math.round(P.spo2):'---'):'--';
+ const co=P.etco2Sensor?((S.t-S.eng.lastVent<30)?Math.round(P.etco2):'0'):'--';
+ const bp=n.busy?'측정 중':(n.last?(n.last.ok?n.last.txt:'---'):'--/--');
+ return {hr:String(hr),sp:String(sp),co:String(co),bp,bpAgo:n.last&&!n.busy?Math.round(S.t-n.last.t):null,
+  ecg:P.pads?(P.compressing?'압박 잡음':''):'리드 없음',spMsg:P.probe?(P.compressing?'신호 불량':''):'센서 없음',
+  sensors:{pads:!!P.pads,probe:!!P.probe,etco2:!!P.etco2Sensor,cuff:!!P.cuff}};
+}
+function renderMonitorNums(){
+ const P=S.P,M=monShown();
+ const hr=M.hr;
  $('#mn-hr .v').textContent=hr;$('#mn-hr').classList.toggle('alarm',P.pads&&(!P.pulse||P.hr<45||P.hr>150));
  $('#mn-hr-s').textContent=P.pace.on?'PACE '+P.pace.rate+'·'+P.pace.mA+'mA':'';
- $('#mn-sp .v').textContent=P.probe?(P.pulse&&!P.compressing?Math.round(P.spo2):'---'):'--';$('#mn-sp').classList.toggle('alarm',P.probe&&(!P.pulse||P.spo2<90));
- const recent=S.t-S.eng.lastVent<30;$('#mn-co .v').textContent=P.etco2Sensor?(recent?Math.round(P.etco2):'0'):'--';
- const n=S.nibp;$('#mn-bp .v').textContent=n.busy?'측정 중':(n.last?(n.last.ok?n.last.txt:'---'):'--/--');
+ $('#mn-sp .v').textContent=M.sp;$('#mn-sp').classList.toggle('alarm',P.probe&&(!P.pulse||P.spo2<90));
+ $('#mn-co .v').textContent=M.co;
+ const n=S.nibp;$('#mn-bp .v').textContent=M.bp;
  $('#mn-bp-s').textContent=n.last&&!n.busy?fmt(S.t-n.last.t)+' 전':'';
  $('#b-auto').classList.toggle('on',n.auto);$('#b-read').disabled=!P.pads;
  $('#msg-ecg').textContent=P.pads?(P.compressing?'압박 잡음':''):'리드 없음 · 패드 부착 필요';
  $('#msg-sp').textContent=P.probe?(P.compressing?'신호 불량':''):'센서 없음';
- $('#msg-co').textContent=P.etco2Sensor?(recent?'':'무호흡 30초'):'센서 없음';
+ const recent=S.t-S.eng.lastVent<30;$('#msg-co').textContent=P.etco2Sensor?(recent?'':'무호흡 30초'):'센서 없음';
 }
 function openRead(){
  if(!S.P.pads)return;const el=$('#readpop');

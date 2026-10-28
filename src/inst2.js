@@ -106,7 +106,7 @@ function instState(){
  if(!o.has&&!S.ended)return o;
  const P=S.P;
  o.P={rhythm:P.rhythm,rhName:RH[P.rhythm].name,pulse:P.pulse,paceCapture:P.paceCapture,hr:P.hr,sbp:P.sbp,sbpT:P.sbpT,spo2:P.spo2,etco2:P.etco2,cause:P.cause,causeName:P.cause?CAUSES[P.cause].name:null,causeFixed:P.causeFixed,epiCirc:P.epiCirc,antiarr:P.antiarr,access:P.access,airway:P.airway,pads:P.pads};
- o.comp=compNow();
+ o.comp=compNow();try{o.mon=monShown();}catch(e){o.mon=null;}
  o.def=({idle:'대기',charging:'충전 중',charged:'충전 완료',syncing:'동기화 대기'})[S.def.state]||S.def.state;
  o.cb=({idle:'미호출',coming:'오는 중',arrived:'도착'})[S.codeBlue.status]||S.codeBlue.status;
  o.team2=S.members.map(m=>({name:m.name,role:m.role,task:m.task?(TASKS[m.task]&&TASKS[m.task].busy)||m.task:null,paused:!!m.paused,pct:m.prep?Math.min(100,Math.round(m.prog/m.prep*100)):100})).concat((S.away||[]).map(a=>({name:a.m.name,role:a.m.role,task:'자리 비움',away:Math.round(a.back-S.t)})));

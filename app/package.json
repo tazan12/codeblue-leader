@@ -1,7 +1,7 @@
 {
   "name": "codeblue-leader",
   "productName": "CodeBlueLeader",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "코드블루 리더 - 병동 전문소생술 팀 리더 시뮬레이터",
   "author": "Kyungmin University Nursing",
   "main": "main.js",

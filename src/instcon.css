@@ -103,3 +103,7 @@ html.instwin,html.instwin body{background:#0d1014!important;margin:0}
 .ic-toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:#26303a;color:#fff;padding:9px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:.25s;z-index:10;max-width:90vw}
 .ic-toast.on{opacity:1;transform:translate(-50%,0)}
 @media (max-width:820px){.ic-two{grid-template-columns:minmax(0,1fr)}.ic-tabs{top:auto;position:static}}
+
+.ic-monrow h5,.ic-h5{margin:10px 0 6px;font-size:12px;font-weight:600;color:var(--ic-ink,#e8edf2)}.ic-monrow h5 small,.ic-h5 small{font-weight:400;color:var(--ic-mut);margin-left:6px}
+.ic-shown div{border:1px solid rgba(47,211,191,.35)}.ic-shown div.off b{color:var(--ic-mut)}.ic-shown div.off em{color:#ffb648}
+.ic-real div{background:#161b21}.ic-real b{font-size:20px!important;color:#c9d3dc}

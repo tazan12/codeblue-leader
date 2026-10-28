@@ -22,7 +22,7 @@ const NTS=[['lead','리더십·역할 분담'],['comm','의사소통(폐쇄 루�
 const SAY_PRESET=[['situ','보호자가 상황을 계속 묻습니다'],['situ','검사실에서 칼륨 수치 이상을 알려 왔습니다'],['situ','주치의가 전화로 상황 보고를 요청합니다'],['coach','리듬 확인 시간입니다 — 2분이 지났습니다'],['coach','압박 중단이 길어지고 있습니다'],['coach','역할을 소리 내어 지정해 보세요'],['coach','가역적 원인(5H·5T)을 점검해 보세요']];
 function send(act,a){IC.link.send({t:'cmd',act,a:a||{}});flash(act);}
 function flash(act){document.querySelectorAll('[data-ic="'+act+'"]').forEach(b=>{b.classList.add('sent');setTimeout(()=>b.classList.remove('sent'),500);});}
-function onMsg(m){if(!m||m.t!=='state')return;IC.st=m;IC.seen=Date.now();if(m.ended&&!IC.wasEnded){IC.wasEnded=true;setTab('deb');}if(!m.ended&&m.has)IC.wasEnded=false;if(m.err)toastC(m.err);render();}
+function onMsg(m){if(!m||m.t!=='state')return;IC.st=m;IC.seen=Date.now();if(m.ended&&!IC.wasEnded){IC.wasEnded=true;setTab('deb');}if(!m.ended&&m.has){if(IC.wasEnded&&IC.tab==='deb')setTab('run');IC.wasEnded=false;}if(m.err)toastC(m.err);render();}
 function toastC(t){const el=q('#ic-toast');if(!el)return;el.textContent=t;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),2600);}
 function shell(){
   document.title='강사 콘솔 · 코드블루 리더';
@@ -45,7 +45,7 @@ function shell(){
   '<div class="ic-toast" id="ic-toast"></div><footer class="ic-foot">학생 화면에는 강사 조작이 보이지 않습니다(상황 알림·코칭 힌트는 보임). 디브리핑에는 모두 기록됩니다.<span id="ic-gk"></span></footer>';
   document.body.appendChild(root);document.documentElement.classList.add('instwin');
   root.addEventListener('change',e=>{if(e.target.matches('select'))e.target.dataset.touched='1';});
-  root.addEventListener('click',e=>{const t=e.target.closest('[data-tab]');if(t){setTab(t.dataset.tab);return;}const b=e.target.closest('[data-ic]');if(!b)return;doAct(b.dataset.ic,b);});
+  root.addEventListener('click',e=>{const t=e.target.closest('#ic-tabs [data-tab]');if(t){setTab(t.dataset.tab);return;}const b=e.target.closest('[data-ic]');if(!b)return;doAct(b.dataset.ic,b);});
   document.addEventListener('keydown',e=>{
     if(e.target.matches('input,textarea,select'))return;if(e.ctrlKey||e.metaKey||e.altKey)return;
     if(/^[1-4]$/.test(e.key)){setTab(['run','obs','deb','cls'][+e.key-1]);return;}
@@ -56,7 +56,7 @@ function shell(){
   });
   if(window.cblBridge&&window.cblBridge.electron)q('#ic-gk').textContent=' 학생 화면을 클릭해 둔 상태에서도 Ctrl+Alt+같은 글자로 바로 실행됩니다.';
 }
-function setTab(t){IC.tab=t;document.querySelectorAll('#ic-tabs [data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));['run','obs','deb','cls'].forEach(x=>{const p=q('#ic-pane-'+x);if(p)p.hidden=x!==t;});IC.sig={};render();}
+function setTab(t){if(!['run','obs','deb','cls'].includes(t))return;IC.tab=t;document.querySelectorAll('#ic-tabs [data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));['run','obs','deb','cls'].forEach(x=>{const p=q('#ic-pane-'+x);if(p)p.hidden=x!==t;});IC.sig={};render();}
 function doAct(a,b){
   if(a==='rh'){send('rh',{k:q('#ic-rh').value,hr:+q('#ic-hr').value||0});delete q('#ic-rh').dataset.touched;return;}
   if(a==='sbp'){const v=+q('#ic-sbp').value;if(v)send('sbp',{v});return;}
@@ -70,7 +70,7 @@ function doAct(a,b){
   if(a==='markGood'||a==='markBad'){const inp=q('#ic-mark');const v=inp?inp.value.trim():'';send('mark',{kind:a==='markGood'?'good':'bad',v});if(inp)inp.value='';toastC((a==='markGood'?'잘한 점':'개선점')+' 장면을 표시했습니다');return;}
   if(a==='nts'){send('nts',{k:b.dataset.k,v:+b.dataset.v});return;}
   if(a==='team'){const v=q('#ic-teamname').value.trim();send('team',{v});toastC(v?'팀 이름: '+v:'팀 이름을 지웠습니다');return;}
-  if(a==='showDebrief'){send('showDebrief',{tab:b&&b.dataset.tab||'score'});return;}
+  if(a==='showDebrief'){send('showDebrief',{tab:b&&(b.dataset.dtab||b.dataset.tab)||'score'});toastC('학생 화면에 디브리핑을 띄웠습니다');return;}
   if(a==='csv'){copyCsv();return;}
   if(a==='end'){if(Date.now()-IC.armEnd<3000){send('end');IC.armEnd=0;}else{IC.armEnd=Date.now();document.querySelectorAll('[data-ic="end"]').forEach(x=>{x.textContent='한 번 더 누르면 종료';setTimeout(()=>{x.textContent='케이스 종료';},3000);});}return;}
   if(a==='remote'||a==='remoteOff'){remote(a==='remote');return;}
@@ -97,14 +97,21 @@ function render(){
   if(IC.tab==='run')renderRun(s);else if(IC.tab==='obs')renderObs(s);else if(IC.tab==='deb')renderDeb(s);else renderCls(s);
   renderRemote();
 }
+function vit(l,v,sub,off){return '<div class="'+(off?'off':'')+'"><small>'+l+'</small><b>'+h(v)+'</b><em>'+h(sub)+'</em></div>';}
 function renderRun(s){
   const mini=q('#ic-mini');
   if(!s.has){mini.innerHTML='';q('#ic-truth').innerHTML='<h4>실제 환자 상태</h4><p class="ic-muted">'+(s.ended?'케이스가 끝났습니다. [디브리핑] 탭에서 정리 자료를 보세요.':'학생 화면에서 케이스를 시작하면 실제 리듬과 활력징후가 여기에 표시됩니다.')+'</p>';q('#ic-team').innerHTML='';q('#ic-log').innerHTML='';q('#ic-script').innerHTML='';IC.sig['#ic-script']=null;return;}
   const P=s.P;
-  mini.innerHTML='<b class="'+(P.pulse?'ok':'bad')+'">'+h(P.rhName)+'</b> HR '+Math.round(P.hr)+' · SBP '+Math.round(P.sbp)+(s.comp?' · 압박 중':'');
-  q('#ic-truth').innerHTML='<h4>실제 환자 상태 <small>학생에게는 보이지 않음</small></h4>'+
+  mini.innerHTML='<b class="'+(P.pulse?'ok':'bad')+'">'+h(P.rhName)+'</b> 실제 HR '+Math.round(P.hr)+' · SBP '+Math.round(P.sbp)+(s.comp?' · 압박 중':'');
+  q('#ic-truth').innerHTML='<h4>환자 상태 <small>리듬·실제 생리 값은 학생에게 보이지 않음</small></h4>'+
    '<div class="ic-rhy'+(P.pulse?' ok':' arrest')+'"><b>'+h(P.rhName)+'</b><span>'+(P.pulse?'맥박 있음':'맥박 없음')+(P.paceCapture?' · 조율 포획':'')+'</span></div>'+
-   '<div class="ic-vit"><div><small>HR</small><b>'+Math.round(P.hr)+'</b></div><div><small>SBP</small><b>'+Math.round(P.sbp)+'</b><em>목표 '+Math.round(P.sbpT)+'</em></div><div><small>SpO₂</small><b>'+Math.round(P.spo2)+'</b></div><div><small>EtCO₂</small><b>'+Math.round(P.etco2)+'</b></div></div>'+
+   (s.mon?'<div class="ic-monrow"><h5>학생 모니터에 보이는 값 <small>학생 화면과 같음</small></h5><div class="ic-vit ic-shown">'+
+     vit('HR',s.mon.hr,s.mon.sensors.pads?'ECG 패드':(s.mon.sensors.probe?'SpO₂ 맥박':'리드 없음'),!s.mon.sensors.pads&&!s.mon.sensors.probe)+
+     vit('NIBP',s.mon.bp,s.mon.sensors.cuff?(s.mon.bpAgo!=null?mmss(s.mon.bpAgo)+' 전 측정':'측정 전'):'커프 없음',!s.mon.sensors.cuff)+
+     vit('SpO₂',s.mon.sp,s.mon.sensors.probe?(s.mon.spMsg||'연결됨'):'센서 없음',!s.mon.sensors.probe)+
+     vit('EtCO₂',s.mon.co,s.mon.sensors.etco2?'연결됨':'센서 없음',!s.mon.sensors.etco2)+'</div></div>':'')+
+   '<h5 class="ic-h5">실제 생리 값 <small>장치 연결과 관계없는 시뮬레이션 내부 값</small></h5>'+
+   '<div class="ic-vit ic-real"><div><small>HR</small><b>'+Math.round(P.hr)+'</b></div><div><small>SBP</small><b>'+Math.round(P.sbp)+'</b><em>목표 '+Math.round(P.sbpT)+'</em></div><div><small>SpO₂</small><b>'+Math.round(P.spo2)+'</b></div><div><small>EtCO₂</small><b>'+Math.round(P.etco2)+'</b></div></div>'+
    '<div class="ic-tags"><span class="'+(s.comp?'on':'')+'">'+(s.comp?'가슴압박 중':'압박 없음')+'</span><span>제세동기 '+h(s.def)+'</span><span>기도 '+({none:'없음',ett:'기관내관'}[P.airway]||h(P.airway))+'</span><span>혈관 '+({none:'없음',iv:'정맥로',io:'골내로'}[P.access]||h(P.access))+'</span><span>원인 '+h(P.causeName||'없음')+(P.cause?(P.causeFixed?' (교정됨)':' (미교정)'):'')+'</span><span>에피 '+P.epiCirc+'회</span><span>항부정맥제 '+(P.antiarr?'투여':'미투여')+'</span><span>지원팀 '+h(s.cb)+'</span></div>';
   if(document.activeElement!==q('#ic-sbp')&&!q('#ic-sbp').value)q('#ic-sbp').placeholder='목표 '+Math.round(P.sbpT);
   q('#ic-team').innerHTML=s.team2.map(m=>'<div class="ic-mem"><b>'+h(m.name)+'</b><small>'+h(m.role)+'</small><span class="'+(m.away!=null||m.paused?'hold':m.task?'busy':'')+'">'+(m.away!=null?'자리 비움 · '+m.away+'초 뒤 복귀':m.task?h(m.task)+(m.paused?' (중단)':m.pct<100?' '+m.pct+'%':''):'대기')+'</span></div>').join('');
@@ -130,7 +137,7 @@ function renderDeb(s){
   const R=s.result,D=s.debrief||{};const key=JSON.stringify([R.total,s.time,(s.marks||[]).length,s.nts||{}]);
   const sec=(t,arr,cls)=>arr&&arr.length?'<div class="ic-pearl '+(cls||'')+'"><h5>'+t+'</h5><ul>'+arr.map(x=>'<li>'+h(x)+'</li>').join('')+'</ul></div>':'';
   const nts=s.nts||{};const rated=NTS.filter(d=>nts[d[0]]);
-  setIf('#ic-deb',key,'<div class="ic-card ic-res"><div class="ic-grade g'+h(R.grade)+'">'+h(R.grade)+'</div><div><b>'+R.total+'점</b> · '+({success:'안정화',death:'환자 사망',stopped:'미완료 종료'}[R.outcome]||'')+(s.testMode?(R.pass?' · <span class="okc">통과</span>':' · <span class="badc">불통과</span>'):'')+'<div class="ic-muted">'+h(s.caseName)+' · '+h(s.modeName)+' · '+mmss(s.time)+(s.team?' · '+h(s.team):'')+'</div></div><span class="ic-sp"></span><button class="ic-btn sm" data-ic="showDebrief" data-tab="score">학생 화면: 점수</button><button class="ic-btn sm" data-ic="showDebrief" data-tab="timeline">학생 화면: 타임라인</button></div>'+
+  setIf('#ic-deb',key,'<div class="ic-card ic-res"><div class="ic-grade g'+h(R.grade)+'">'+h(R.grade)+'</div><div><b>'+R.total+'점</b> · '+({success:'안정화',death:'환자 사망',stopped:'미완료 종료'}[R.outcome]||'')+(s.testMode?(R.pass?' · <span class="okc">통과</span>':' · <span class="badc">불통과</span>'):'')+'<div class="ic-muted">'+h(s.caseName)+' · '+h(s.modeName)+' · '+mmss(s.time)+(s.team?' · '+h(s.team):'')+'</div></div><span class="ic-sp"></span><button class="ic-btn sm" data-ic="showDebrief" data-dtab="score">학생 화면: 점수</button><button class="ic-btn sm" data-ic="showDebrief" data-dtab="timeline">학생 화면: 타임라인</button></div>'+
    '<div class="ic-two"><div class="ic-card"><h4>디브리핑 질문 안내 <small>PEARLS</small></h4>'+sec('① 반응',D.reaction)+sec('② 기술',D.description)+sec('③ 분석 — 이번 케이스에서 짚을 점',D.analysis&&D.analysis.length?D.analysis:['큰 문제 없이 진행되었습니다. 잘된 점이 왜 잘되었는지 함께 정리해 보세요.'],'focus')+sec('잘한 점 — 강화할 행동',D.good,'good')+sec('④ 요약',D.summary)+'</div>'+
    '<div class="ic-card"><h4>점수 내역</h4><div class="ic-items">'+R.items.map(i=>'<div class="'+(i.max&&i.pts<i.max*0.6?'low':'')+'"><span>'+h(i.cat)+' · '+h(i.label)+'</span><b>'+i.pts+'/'+i.max+'</b><em>'+h(i.detail)+'</em></div>').join('')+'</div>'+
    ((s.crit&&s.crit.length)?'<h4 style="margin-top:12px">중대 오류</h4>'+s.crit.map(c=>'<div class="ic-critl"><time>'+mmss(c.t)+'</time>'+h(c.text)+'</div>').join(''):'')+
